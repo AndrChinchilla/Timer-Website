@@ -1,0 +1,34 @@
+
+body {
+    font-family: Arial;
+    background: gray ;
+    color: whitesmoke;
+}
+
+button {
+    border: groove;
+    background-color: inherit;
+    color: whitesmoke;
+    padding: 14px 28px;
+    font-size: 16px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+#my_timer{
+
+  font-family: Arial;
+  font-size: 60px;
+  color: aliceblue;
+
+
+}
+
+#control {
+    background-color: rgb(4, 160, 4);
+  }
+
+#reset {
+  background-color: red;
+}
+
