@@ -24,6 +24,10 @@ button {
 
 }
 
+#hundred{
+  font-size: 35px;
+}
+
 #control {
     background-color: rgb(4, 160, 4);
   }

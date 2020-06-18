@@ -3,76 +3,88 @@
  * to the second.
  */
 
-
- const second_ms = 1000 ;  //1000 ms = 1s
+ const interval = 10; 
+ const second_hs = 100 ;  //100 hs = 1s
  const minute_s = 60 ;  //60 s = 1m
- const hour_s = 3600 ;  //3600 s = 1h
+ const hour_m = 60 ;  //60 m = 1h
 
 
-var active = false;
+
+var active = false;   //Control timer
+var expected = Date.now() + interval   //Expected time each interval, use to sync clock.
 
 
+//Timer, only works when active is true. Controlled by changeState()
 function startTimer()
 {
     
     if (active)
     {
-            
-        var timer = document.getElementById("my_timer").innerHTML;
-         
-        var timeArr = timer.split(":"); 
 
-        var hour = timeArr[0];
-        var minute = timeArr[1];
-        var second = timeArr[2];
-    
-        
-       if (second == 59)
-       {
-           if(minute == 59)
-           {
-               hour++;
-               minute =  0;
-               if (hour < 10)
-               {
-                   hour = "0" + hour;
-               }
-           }
-           else
-           {
-                minute ++;
-           }
+        var hour = document.getElementById("hour").innerHTML;
+        var minute = document.getElementById("minute").innerHTML;
+        var second = document.getElementById("second").innerHTML;
+        var hundred = document.getElementById("hundred").innerHTML;
 
-           if (minute < 10)
-           {
-               minute = "0" + minute;
-           }
+        hundred++;
 
-           second = "0" + 0;
-       }
-       else
-       {
-              
-            second ++;
+        if (hundred < 10)
+        {
+          hundred = "0" + hundred;  
+        }
+
+        if (hundred == second_hs)
+        {
+            second++ ;
+            hundred =  "0" + 0;
             if (second < 10)
             {
                 second = "0" + second;
             }
-       }
-        //Update html
-        document.getElementById("my_timer").innerHTML = hour + ":" + minute + ":" + second;
+        }
+        if (second == minute_s)
+        {
+            minute ++;
+            second = "0" + 0;
+            if (minute < 10)
+            {
+                minute = "0" + minute;
+            }
+        }
+        if (minute == hour_m)
+        {
+            hour++;
+            minute = "0" + 0;
+            if (hour < 10)
+            {
+                hour = "0" + hour;
+            }
+        }
         
-        setTimeout(startTimer, 1000);
+        //Update html
+        document.getElementById("hour").innerHTML = hour 
+        document.getElementById("minute").innerHTML = minute
+        document.getElementById("second").innerHTML = second
+        document.getElementById("hundred").innerHTML = hundred
+
+        var drift = Date.now() - expected
+
+        expected += interval;
+
+        setTimeout(startTimer, Math.max(0, interval - drift));   //Account for drift when setting interval
         
     }
 
 }
 
+//Changes the state of timer to opposite of current state
 function changeState()
 {
     if (active == false)
     {
         active = true;
+        expected = Date.now() + interval
+
         startTimer();
         console.log("Timer started");
         document.getElementById("control").innerHTML = "PAUSE";
@@ -87,12 +99,23 @@ function changeState()
 
 }
 
+//Resets time and pauses time.
 function reset()
 {
-    document.getElementById("my_timer").innerHTML =  "00:00:00";
-    
+    document.getElementById("hour").innerHTML = "0" + 0 ;
+    document.getElementById("minute").innerHTML = "0" + 0;
+    document.getElementById("second").innerHTML = "0" + 0;
+    document.getElementById("hundred").innerHTML = "0" + 0;
+
+    active = true;
     changeState();
     
+}
+
+//Takes current time and saves it (known as a split) and displays it without pausing the timer.
+function split()
+{
+    //TODO: 
 }
 
 
