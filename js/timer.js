@@ -12,7 +12,12 @@
 
 var active = false;   //Control timer
 var expected = Date.now() + interval   //Expected time each interval, use to sync clock.
+var splits = [] ;  //Store times for all splits created
 
+var hour = 0;
+var minute = 0;
+var second = 0;
+var hundred = 0;
 
 //Timer, only works when active is true. Controlled by changeState()
 function startTimer()
@@ -21,10 +26,10 @@ function startTimer()
     if (active)
     {
 
-        var hour = document.getElementById("hour").innerHTML;
-        var minute = document.getElementById("minute").innerHTML;
-        var second = document.getElementById("second").innerHTML;
-        var hundred = document.getElementById("hundred").innerHTML;
+        hour = document.getElementById("hour").innerHTML;
+        minute = document.getElementById("minute").innerHTML;
+        second = document.getElementById("second").innerHTML;
+        hundred = document.getElementById("hundred").innerHTML;
 
         hundred++;
 
@@ -62,12 +67,12 @@ function startTimer()
         }
         
         //Update html
-        document.getElementById("hour").innerHTML = hour 
-        document.getElementById("minute").innerHTML = minute
-        document.getElementById("second").innerHTML = second
-        document.getElementById("hundred").innerHTML = hundred
+        document.getElementById("hour").innerHTML = hour ;
+        document.getElementById("minute").innerHTML = minute;
+        document.getElementById("second").innerHTML = second;
+        document.getElementById("hundred").innerHTML = hundred;
 
-        var drift = Date.now() - expected
+        var drift = Date.now() - expected;
 
         expected += interval;
 
@@ -115,13 +120,20 @@ function reset()
 //Takes current time and saves it (known as a split) and displays it without pausing the timer.
 function split()
 {
-    //TODO: 
+    splits.push([hour,minute,second,hundred]); 
+    var para = document.createElement("p");
+    var content = document.createTextNode( hour + ":" + minute + ":" + second + "." + hundred);
+    para.appendChild(content);
+    var element = document.getElementById("splits");
+    element.appendChild(para);
 }
 
 
 let startButton = document.getElementById("control");
 let resetButton = document.getElementById("reset");
+let splitButton = document.getElementById("split");
 
 startButton.addEventListener('click', changeState);
-resetButton.addEventListener('click', reset)
+resetButton.addEventListener('click', reset);
+splitButton.addEventListener('click',split);
 
