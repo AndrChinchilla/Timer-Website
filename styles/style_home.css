@@ -17,6 +17,16 @@ button {
     margin-left: .5%;
 }
 
+#title_input
+{
+  margin-top: .1%;
+  font-size: 32px;
+  width: 20%;
+  background-color: rgb(31, 31, 31);
+  text-align: center;
+
+}
+
 #my_timer{
 
   font-family: Arial;
@@ -25,7 +35,7 @@ button {
 }
 
 #hundred{
-  font-size: 35px;
+  font-size: 32px;
 }
 
 #control {

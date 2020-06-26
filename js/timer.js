@@ -26,8 +26,8 @@ function startTimer()
     if (active)
     {
 
-        hour = document.getElementById("hour").innerHTML;
-        minute = document.getElementById("minute").innerHTML;
+        hour = document.getElementById("hour").innerHTML.replace(/\D/g,'');   //Remove ':' character
+        minute = document.getElementById("minute").innerHTML.replace(/\D/g,'');
         second = document.getElementById("second").innerHTML;
         hundred = document.getElementById("hundred").innerHTML;
 
@@ -51,24 +51,25 @@ function startTimer()
         {
             minute ++;
             second = "0" + 0;
-            if (minute < 10)
-            {
-                minute = "0" + minute;
-            }
+
         }
         if (minute == hour_m)
         {
             hour++;
             minute = "0" + 0;
-            if (hour < 10)
-            {
-                hour = "0" + hour;
-            }
         }
+
+        
         
         //Update html
-        document.getElementById("hour").innerHTML = hour ;
-        document.getElementById("minute").innerHTML = minute;
+        if(hour){
+            document.getElementById("hour").innerHTML =  hour + ':';
+        }
+        
+        if(minute){
+            document.getElementById("minute").innerHTML =  minute + ':';
+        }
+
         document.getElementById("second").innerHTML = second;
         document.getElementById("hundred").innerHTML = hundred;
 
@@ -104,13 +105,24 @@ function changeState()
 
 }
 
-//Resets time and pauses time.
+//Resets time and removes all splits and pauses time.
 function reset()
 {
-    document.getElementById("hour").innerHTML = "0" + 0 ;
-    document.getElementById("minute").innerHTML = "0" + 0;
+    document.getElementById("hour").innerHTML = '' ;
+    document.getElementById("minute").innerHTML = '';
     document.getElementById("second").innerHTML = "0" + 0;
     document.getElementById("hundred").innerHTML = "0" + 0;
+
+    var created_splits = document.querySelector('#splits');
+
+    while (created_splits.firstChild)
+    {
+        created_splits.removeChild(created_splits.firstChild);
+    }
+
+    //Save all stored splits to file and clear array
+    //TODO: Learn about json and file storage (Eloquent Javascript ch 20 on node.js)
+
 
     active = true;
     changeState();
@@ -122,7 +134,16 @@ function split()
 {
     splits.push([hour,minute,second,hundred]); 
     var para = document.createElement("p");
-    var content = document.createTextNode( hour + ":" + minute + ":" + second + "." + hundred);
+
+    if (hour)
+    {
+        hour = hour + ':';
+    }
+    if(minute)
+    {
+        minute = minute + ':';
+    }
+    var content = document.createTextNode(hour + "" + minute + "" + second + "." + hundred);
     para.appendChild(content);
     var element = document.getElementById("splits");
     element.appendChild(para);
