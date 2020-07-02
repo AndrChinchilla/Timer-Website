@@ -4,14 +4,15 @@
  */
 
  const interval = 10; 
- const second_hs = 100 ;  //100 hs = 1s
- const minute_s = 60 ;  //60 s = 1m
- const hour_m = 60 ;  //60 m = 1h
+ const second_ms = 1000 ;  //1000 ms = 1s
+ const minute_ms = 60000 ;  //60 s = 1m
+ const hour_ms = 3600000 ;  //60 m = 1h
 
 
 
 var active = false;   //Control timer
-var expected = Date.now() + interval   //Expected time each interval, use to sync clock.
+var start = Date.now()    //Start Time
+var expected = start + 10   //Expected time for each interval
 var splits = [] ;  //Store times for all splits created
 
 var hour = 0;
@@ -20,113 +21,145 @@ var second = 0;
 var hundred = 0;
 
 //Timer, only works when active is true. Controlled by changeState()
-function startTimer()
+function runTimer()
 {
     
     if (active)
     {
 
-        hour = document.getElementById("hour").innerHTML.replace(/\D/g,'');   //Remove ':' character
-        minute = document.getElementById("minute").innerHTML.replace(/\D/g,'');
-        second = document.getElementById("second").innerHTML;
-        hundred = document.getElementById("hundred").innerHTML;
+        const millis = Date.now() - start ;  //Total milliseconds since start of timer
 
-        hundred++;
-
-        if (hundred < 10)
-        {
-          hundred = "0" + hundred;  
-        }
-
-        if (hundred == second_hs)
-        {
-            second++ ;
-            hundred =  "0" + 0;
-            if (second < 10)
-            {
-                second = "0" + second;
-            }
-        }
-        if (second == minute_s)
-        {
-            minute ++;
-            second = "0" + 0;
-
-        }
-        if (minute == hour_m)
-        {
-            hour++;
-            minute = "0" + 0;
-        }
-
+        updateDisplay(millis);
         
         
-        //Update html
-        if(hour){
-            document.getElementById("hour").innerHTML =  hour + ':';
-        }
-        
-        if(minute){
-            document.getElementById("minute").innerHTML =  minute + ':';
-        }
-
-        document.getElementById("second").innerHTML = second;
-        document.getElementById("hundred").innerHTML = hundred;
-
         var drift = Date.now() - expected;
 
         expected += interval;
 
-        setTimeout(startTimer, Math.max(0, interval - drift));   //Account for drift when setting interval
+        setTimeout(runTimer, Math.max(0, interval - drift));   //Account for drift when setting interval
         
     }
 
 }
 
-//Changes the state of timer to opposite of current state
-function changeState()
+//Update timer display with new time
+function updateDisplay(timeElapsed)
+{
+          
+            var updateTime = timeElapsed;
+
+            hour = Math.floor(timeElapsed / hour_ms);
+
+            
+            //Update html
+            if(hour > 0){
+                updateTime = updateTime % hour_ms;
+                document.getElementById("hour").innerHTML =  hour + ':';
+                
+            }
+            
+            minute = Math.floor(updateTime / minute_ms);
+            if(minute > 0){
+
+                updateTime = updateTime % minute_ms;
+                document.getElementById("minute").innerHTML =  minute + ':';
+
+                if (hour > 0 && minute < 10)
+                {
+                    minute = "0" + minute;
+                }
+            }
+
+            second = Math.floor(updateTime / second_ms);
+
+            if (second > 0)
+            {
+                updateTime = updateTime % second_ms;
+                
+            } 
+
+            if (second < 10)
+            {
+                second = "0" + second;
+            }
+            
+            hundred = Math.floor(updateTime / 10);
+
+            if (hundred < 10)
+            {
+                hundred = "0" + hundred;
+            }
+    
+            document.getElementById("second").innerHTML = second;
+            document.getElementById("hundred").innerHTML = hundred;
+
+            
+
+}
+
+//Starts timer and allows creation of splits if timer is active, resets if timer has been paused
+function time()
 {
     if (active == false)
     {
+        reset();
         active = true;
-        expected = Date.now() + interval
+        start = Date.now();
+        expected = Date.now() + interval;
 
-        startTimer();
+        runTimer();
         console.log("Timer started");
-        document.getElementById("control").innerHTML = "PAUSE";
+        document.getElementById("control").innerHTML = "SPLIT";
 
     }
     else
     {
-        active = false;
-        console.log("Timer paused");
-        document.getElementById("control").innerHTML = "START";
+        split();
     }
-
 }
 
-//Resets time and removes all splits and pauses time.
+
+//Resets time if timer is stopped and removes all splits or stops timer.
 function reset()
 {
-    document.getElementById("hour").innerHTML = '' ;
-    document.getElementById("minute").innerHTML = '';
-    document.getElementById("second").innerHTML = "0" + 0;
-    document.getElementById("hundred").innerHTML = "0" + 0;
 
-    var created_splits = document.querySelector('#splits');
-
-    while (created_splits.firstChild)
+    if (active == true)
     {
-        created_splits.removeChild(created_splits.firstChild);
+        active = false;
+        document.getElementById("reset").innerHTML = "RESET";
+        document.getElementById("control").innerHTML = "RESTART";
+
+        runTimer();
+        
     }
 
-    //Save all stored splits to file and clear array
-    //TODO: Learn about json and file storage (Eloquent Javascript ch 20 on node.js)
+    else
+    {
 
+        document.getElementById("hour").innerHTML = '' ;
+        document.getElementById("minute").innerHTML = '';
+        document.getElementById("second").innerHTML = "0" + 0;
+        document.getElementById("hundred").innerHTML = "0" + 0;
 
-    active = true;
-    changeState();
-    
+        hour = '';
+        minute = '';
+        second = "0" + 0 ;
+        hundred = "0" + 0 ;
+
+        var created_splits = document.querySelector('#splits');
+
+        while (created_splits.firstChild)
+        {
+            created_splits.removeChild(created_splits.firstChild);
+        }
+
+        document.getElementById("control").innerHTML = "START";  
+        document.getElementById("reset").innerHTML = "STOP";
+
+        //Save all stored splits to file and clear array
+        //TODO: Learn about json and file storage (Eloquent Javascript ch 20 on node.js)
+    }
+   
 }
 
 //Takes current time and saves it (known as a split) and displays it without pausing the timer.
@@ -134,27 +167,38 @@ function split()
 {
     splits.push([hour,minute,second,hundred]); 
     var para = document.createElement("p");
+    
 
-    if (hour)
+    if (hour > 0)
     {
         hour = hour + ':';
     }
-    if(minute)
+    else
+    {
+        hour = "";
+    }
+    if(minute > 0)
     {
         minute = minute + ':';
+    }
+    else
+    {
+        minute = "";
+
     }
     var content = document.createTextNode(hour + "" + minute + "" + second + "." + hundred);
     para.appendChild(content);
     var element = document.getElementById("splits");
     element.appendChild(para);
+    
 }
 
 
 let startButton = document.getElementById("control");
 let resetButton = document.getElementById("reset");
-let splitButton = document.getElementById("split");
 
-startButton.addEventListener('click', changeState);
+
+startButton.addEventListener('click', time);
 resetButton.addEventListener('click', reset);
-splitButton.addEventListener('click',split);
+
 
