@@ -17,7 +17,12 @@ button {
     margin-left: .5%;
 }
 
-#title_input
+hr{
+  border-top: 30%;
+  background-color: whitesmoke;
+}
+
+#category
 {
   
   font-size: 32px;
@@ -27,19 +32,21 @@ button {
 
 }
 
-#timer
+#my_timer
 {
   
   width: 30%;
   font-size: 16px;
   background-color:  rgb(51, 49, 49);
+  text-align: left;
 }
 
 #splits{
+  position: relative;
   margin-left: .5%;
 }
 
-#my_timer{
+#time{
 
   margin-left: .5%;
   font-family: Arial;
@@ -58,6 +65,53 @@ button {
 
 #reset {
   background-color: red;
+}
+
+#create{
+  background-color: orange;
+}
+
+#update{
+  background-color: rgb(13, 107, 119);
+}
+
+.name{
+  font-size: 20px;
+  
+}
+
+.time_gain{
+  position: absolute;
+  font-size: 20px;
+  left: 70%;
+  color:green;
+  
+}
+
+.time_loss
+{
+  position: absolute;
+  font-size: 20px;
+  left: 70%;
+  color: red;
+}
+
+.gold_time
+{
+  position: absolute;
+  font-size: 20px;
+  left: 70%;
+  color: gold
+}
+
+
+
+.cumulative{
+  position: absolute;
+
+  font-size: 20px;
+  right: 1%;
+   
 }
 
 
