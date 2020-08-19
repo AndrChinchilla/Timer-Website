@@ -273,15 +273,38 @@ function createTime(string)
 
 }
 
+//Create a drop down list with all created timers so that user can selected their timer to update timer with. 
+function getAllTimers()
+{
+    timers = Object.keys(localStorage); //Get all items in local storage
+
+    let timer_menu = document.getElementById('created_timers');
+
+    for (key of timers)
+    {
+        var option = document.createElement("option");
+        option.value = key;
+        
+        option.appendChild( document.createTextNode(key) );
+
+        timer_menu.appendChild(option)
+
+    }
+}
 
 //Updates timer with selected timer info.
 function updateDisplay()
 {
-    var object = localStorage.getItem("timer");
+    resetTimeDisplay();   //Reset timer to base to allow user to switch timer multiple times without reloading. 
+
+    let elements = document.querySelector("form").elements;   
+
+      
+    var object = localStorage.getItem(elements[0].value);   //Get timer that has been selected by user
     var timer = JSON.parse(object);
 
     console.log(timer)
-    
+
 
     var para = document.createElement("p");
     var splits = document.getElementById("splits")
@@ -325,18 +348,43 @@ function updateDisplay()
             gold_times.push(value);
         }
          
+    }    
+}
+
+/**
+ * This method reset time to base display, removing any splits and category name. 
+ */
+function resetTimeDisplay()
+{
+    document.getElementById("category").innerHTML = '';   //Reset category
+    
+    //Remove Splits
+    var created_splits = document.querySelector('#splits');
+
+    while (created_splits.firstChild)
+    {
+        created_splits.removeChild(created_splits.firstChild);
     }
-        
+
+
+
 }
 
 
 let startButton = document.getElementById("control");
 let resetButton = document.getElementById("reset");
-let updateDisplayButton = document.getElementById("update");
+
+
+let form = document.getElementById("myForm");
+function handleForm(event) { event.preventDefault(); } 
+form.addEventListener('submit', handleForm);
+
 
 
 startButton.addEventListener('click', time);
 resetButton.addEventListener('click', reset);
-updateDisplayButton.addEventListener('click', updateDisplay);
+
+
+
 
 

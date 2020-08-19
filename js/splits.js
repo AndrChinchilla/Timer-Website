@@ -15,11 +15,15 @@ function validateForm()
 
     var object = {};
 
+    
+
     //Validate each element of form
     for (let element of elements){
 
         //Validate input and save it to object
         if (element.type == 'text' && element.value == ""){
+
+           
             
             alert("Must be filled out");
             return false;
@@ -29,9 +33,17 @@ function validateForm()
         object[element.name] = element.value;
         
     }
-    //TODO: Update timer with info
-    //TODO: Allow for storage and selection of multiple timers (hash storage)
-    localStorage.setItem("timer", JSON.stringify(object));   //Save Timer to local Storage
+
+    //Check if timer already exist before setting
+    if (localStorage.getItem(object['category']) != null)
+    {
+        alert("Timer already exists");
+        return false;
+
+    }
+    
+    //Save Timer to local Storage, store under category name.
+    localStorage.setItem(object['category'], JSON.stringify(object));   
     
 }
 /**
@@ -63,6 +75,8 @@ function addFields()
     container.appendChild(inputGold);
     
 }
+
+
 
 
 

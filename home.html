@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="styles/style_home.css">
 
 
-    <body id="timer">
+    <body id="timer" onload="getAllTimers()">
 
         <header class="navbar-dark">
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -53,6 +53,8 @@
           <p id = "time"><span id = "hour"></span><span id = "minute"></span><span id = "second">00</span>.<span id = "hundred">00</span></p>
         </div>
 
+
+
         <button id = "control">START</button>
         <button id= "reset">STOP</button>
        
@@ -60,8 +62,10 @@
         <button id = "create">Create Splits</button>
         </a>
 
-        <button id = "update">Update Timer</button> 
- 
+        <form  id = "myForm" method = "POST" action="home.html" onsubmit="return updateDisplay()">
+          <select id="created_timers"></select>
+          <input type="submit">
+        </form>
 
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>

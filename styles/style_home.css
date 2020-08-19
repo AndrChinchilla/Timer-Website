@@ -22,6 +22,29 @@ hr{
   background-color: whitesmoke;
 }
 
+select {
+  width: 140px;
+  height: 35px;
+  padding: 4px;
+  border-radius: 4px;
+  box-shadow: 2px 2px 8px #999;
+  background: #eee;
+  border: none;
+  outline: none;
+  display: inline-block;
+  cursor: pointer;
+}
+
+input[type = submit]{
+  background-color: lightseagreen;
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  text-decoration: none;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
 #category
 {
   
@@ -71,10 +94,6 @@ hr{
   background-color: orange;
 }
 
-#update{
-  background-color: rgb(13, 107, 119);
-}
-
 .name{
   font-size: 20px;
   
@@ -113,5 +132,4 @@ hr{
   right: 1%;
    
 }
-
 
